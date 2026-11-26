@@ -67,7 +67,8 @@ small{display:block;margin-top:2rem;color:var(--dim)}</style>
 <h1>siliconwat.com: drawings</h1>
 <p>siliconwat.com will be a free finder from Silicon Wat<span style="font-size:.6em;vertical-align:.55em;line-height:0">&#8480;</span> for the Khmer Tipiṭaka: a person asks in their own words, in Khmer or English, and sees the typed pages of the Buddhist Institute edition (1927–69) that may answer, with the lines highlighted. It writes no answers of its own; every passage drawn here is real, as typed by Se Mong Ly, and the questions are made up. Every screen is drawn on a phone in English and Khmer, with two desktop screens and a dark pass.</p>
 <p>The icon is a placeholder: Silicon Wat's own mark is not settled.</p>
-<a class="start" href="wall.html"><b>Start here</b><br>Every screen on one wall. Drag to pan, pinch to zoom, tap a screen to open it.</a>
+<a class="start" href="finder.html"><b>Start here: try the finder</b><br>A walkthrough you can drive: ask, see the pages, open one, switch to the Pāli, copy a passage, keep or delete your questions. One fixed example; it searches nothing.</a>
+<a class="start" href="wall.html"><b>Every screen on one wall</b><br>Drag to pan, pinch to zoom, tap a screen to open it.</a>
 <ul>%s</ul>
 <small>These are drawings. They search nothing and charge nothing, and nothing here is live. The Khmer is our own draft until a native reader approves it. Hidden from search by named crawler; shareable by link. Visits to this site are counted without cookies.</small>
 </main>

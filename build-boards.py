@@ -68,6 +68,31 @@ EXAMPLES = [("What helps when someone I love dies?", "តើអ្វីជួ�
 RECENT = [(Q_ANGER, ("Today", "ថ្ងៃនេះ")), (("Is it wrong to eat meat?", "តើការបរិភោគសាច់ ខុសឬទេ?"), ("Yesterday", "ម្សិលមិញ"))]
 
 
+# ── the walkthrough's wiring. build-walk.py sets WALK: the walkthrough is built from these SAME screens, so its words cannot
+#    drift from the drawings'; with WALK off every hook is empty and the boards are byte for byte what they were.
+WALK = False
+WALK_GO = {Q_ANGER[0]: "S2", Q_PHONE[0]: "S4"}
+
+
+def go(v):
+    return ' data-go="%s"' % v if WALK else ""
+
+
+def act(a, msg=None, copy=None):
+    if not WALK:
+        return ""
+    return ' data-act="%s"%s%s' % (a, ' data-msg="%s"' % html.escape(msg) if msg else "", ' data-copy="%s"' % html.escape(copy) if copy else "")
+
+
+def key(q):
+    return ' data-key="%s"' % html.escape(q[0]) if WALK else ""
+
+
+def stub(t):
+    return act("stub", t("Not in this walkthrough: it shows one fixed example and searches nothing.",
+                         "មិនមាននៅក្នុងការបង្ហាញនេះទេ៖ វាបង្ហាញឧទាហរណ៍ថេរមួយ ហើយមិនស្វែងរកអ្វីទេ។"))
+
+
 def esc(s):
     return html.escape(s, quote=False)
 
@@ -98,18 +123,28 @@ def card(sp, h, *ps):
 
 
 def askbox(t, q=None, desk=False):
+    if WALK and q is None:   # a real input: typing explains the fixed example rather than pretending to search
+        return ('<form class="askbox%s" data-act="find">%s<input class="q" id="ask" type="search" autocomplete="off" placeholder="%s" aria-label="%s">'
+                '<button class="go" type="submit">%s</button></form><p class="stubline" hidden>%s</p>'
+                % (" desk" if desk else "", SEARCH, t("Ask in your own words…", "សួរជាពាក្យរបស់អ្នកផ្ទាល់…"), t("Your question", "សំណួររបស់អ្នក"),
+                   t("Find", "ស្វែងរក"), t("This walkthrough has two example questions: tap one below. The real finder will search whatever you ask.",
+                                         "ការបង្ហាញនេះមានសំណួរឧទាហរណ៍ពីរ៖ សូមចុចមួយខាងក្រោម។ កម្មវិធីស្វែងរកពិតប្រាកដ នឹងស្វែងរកអ្វីក៏ដោយដែលអ្នកសួរ។")))
     text = ('<span class="q">%s</span>' % t(*q)) if q else ('<span class="ph">%s</span>' % t("Ask in your own words…", "សួរជាពាក្យរបស់អ្នកផ្ទាល់…"))
     return '<div class="askbox%s">%s%s<span class="go">%s</span></div>' % (" desk" if desk else "", SEARCH, text, t("Find", "ស្វែងរក"))
 
 
 def examples(t):
-    return ('<p class="sh">%s</p><div class="chips">%s</div>' % (t("Examples", "ឧទាហរណ៍"), "".join('<span class="chip">%s</span>' % t(*e) for e in EXAMPLES)))
+    exs = ([Q_ANGER, Q_PHONE] + EXAMPLES) if WALK else EXAMPLES
+    chip = lambda e: '<span class="chip"%s>%s</span>' % (go(WALK_GO[e[0]]) if e[0] in WALK_GO else stub(t), t(*e))
+    return ('<p class="sh">%s</p><div class="chips">%s</div>' % (t("Examples", "ឧទាហរណ៍"), "".join(chip(e) for e in exs)))
 
 
 def recent(t):
-    rows = "".join('<li>%s<span class="rq">%s</span><span class="rw">%s</span></li>' % (CLOCK, t(*q), t(*w)) for q, w in RECENT)
-    return ('<p class="sh">%s</p><ul class="recent">%s</ul><p class="fine" style="margin-top:4px">%s</p>'
-            % (t("Your recent questions", "សំណួររបស់អ្នកថ្មីៗ"), rows, t("Kept only on this device.", "រក្សាទុកតែនៅលើឧបករណ៍នេះប៉ុណ្ណោះ។")))
+    rows = "".join('<li%s%s>%s<span class="rq">%s</span><span class="rw">%s</span></li>' % (
+        key(q), go(WALK_GO[q[0]]) if q[0] in WALK_GO else stub(t), CLOCK, t(*q), t(*w)) for q, w in RECENT)
+    return (('<div class="recentblock">' if WALK else "") + '<p class="sh">%s</p><ul class="recent">%s</ul><p class="fine" style="margin-top:4px">%s</p>'
+            % (t("Your recent questions", "សំណួររបស់អ្នកថ្មីៗ"), rows, t("Kept only on this device.", "រក្សាទុកតែនៅលើឧបករណ៍នេះប៉ុណ្ណោះ។"))
+            + ("</div>" if WALK else ""))
 
 
 def explainer(t):
@@ -121,9 +156,10 @@ def explainer(t):
              '<rect class="hlbar" x="159" y="61" width="52" height="10" rx="3"/><path class="ss" d="M162 66h46"/>'
              '<text x="185" y="128" text-anchor="middle" class="stc">%s</text><text x="60" y="104" text-anchor="middle" class="stc">%s</text></svg>'
              % (t("the page, the line", "ទំព័រ និងបន្ទាត់"), t("your question", "សំណួររបស់អ្នក")))
-    return ('<div class="explainer"><span class="tag">[ EXPLAINER · drawn with /motion later ]</span>%s<span class="play">%s</span>'
+    return ('<div class="explainer"><span class="tag">[ EXPLAINER · drawn with /motion later ]</span>%s<span class="play"%s>%s</span>'
             '<div class="xcap"><b>%s</b><span>%s</span></div></div>'
-            % (still, PLAY, t("How the finder works", "របៀបដែលកម្មវិធីស្វែងរកដំណើរការ"),
+            % (still, act("stub", t("The explainer is still to be made. This is its first frame.", "វីដេអូពន្យល់ មិនទាន់បានធ្វើនៅឡើយទេ។ នេះជាស៊ុមដំបូងរបស់វា។")), PLAY,
+               t("How the finder works", "របៀបដែលកម្មវិធីស្វែងរកដំណើរការ"),
                t("It plays when you tap it. The sound stays off until you turn it on.", "វាចាក់ នៅពេលអ្នកចុចលើវា។ សំឡេងនៅបិទ រហូតដល់អ្នកបើកវា។")))
 
 
@@ -135,8 +171,8 @@ def summary(t):
 
 def result(t, p, dim=False):
     head = ('<div class="rh">%s</div>' % esc(p["heading"])) if p.get("heading") else ""
-    return ('<div class="res%s"><div class="where">%s</div>%s<p class="said">%s</p><span class="open">%s</span></div>'
-            % (" dim2" if dim else "", where(t, p), head, "<mark>%s</mark>" % esc(p["sentence"]), t("Open the page →", "បើកទំព័រ →")))
+    return ('<div class="res%s"><div class="where">%s</div>%s<p class="said">%s</p><span class="open"%s>%s</span></div>'
+            % (" dim2" if dim else "", where(t, p), head, "<mark>%s</mark>" % esc(p["sentence"]), go("page-%d" % P.index(p)), t("Open the page →", "បើកទំព័រ →")))
 
 
 def typed(text, sentence):
@@ -158,75 +194,96 @@ def S1(t):
 
 
 def S2(t):
-    return ('<div class="back">%s<span>%s</span></div>' % (BACK, t("New question", "សំណួរថ្មី")) + askbox(t, Q_ANGER)
+    return ('<div class="back"%s>%s<span>%s</span></div>' % (go("S1"), BACK, t("New question", "សំណួរថ្មី")) + askbox(t, Q_ANGER)
             + '<h1 class="h1s">%s</h1>' % t("Pages that may answer this", "ទំព័រដែលអាចឆ្លើយសំណួរនេះ") + summary(t)
             + "".join(result(t, p) for p in P)
             + '<p class="fine">%s</p>' % t("Every word here is the Tipiṭaka as typed. The finder writes nothing of its own.",
                                            "ពាក្យទាំងអស់នៅទីនេះ គឺជាព្រះត្រៃបិដក ដូចដែលបានវាយ។ កម្មវិធីស្វែងរក មិនសរសេរអ្វីដោយខ្លួនឯងទេ។"))
 
 
-def tools(t):
-    return ('<div class="tools">%s</div>' % "".join('<span class="tool">%s%s</span>' % x for x in (
-        (COPY, t("Copy the citation", "ចម្លងឯកសារយោង")), (SPEAK, t("Listen", "ស្តាប់")), (ASK, t("Ask an AI", "សួរ AI")), (SHARE, t("Share the page", "ចែករំលែកទំព័រ")))))
+def cite(t, p):
+    return t("The Buddhist Institute edition of the Tipiṭaka (Phnom Penh, 1927–69), volume %d, page %s. Typed by Se Mong Ly." % (p["volume"], ar_num(p["printed"])),
+             "ព្រះត្រៃបិដក បោះពុម្ពរបស់ពុទ្ធសាសនបណ្ឌិត្យ (ភ្នំពេញ ១៩២៧–១៩៦៩) ភាគ %s ទំព័រ %s។ វាយដោយ លី ម៉ុង សែ។" % (km_num(p["volume"]), p["printed"]))
+
+
+def tools(t, p=None):
+    p = p or P[0]
+    return ('<div class="tools">%s</div>' % "".join('<span class="tool"%s>%s%s</span>' % x for x in (
+        (act("copy", t("Citation copied", "បានចម្លងឯកសារយោង"), cite(t, p)), COPY, t("Copy the citation", "ចម្លងឯកសារយោង")),
+        (act("stub", t("Listen reads a passage you select aloud. Not in this walkthrough.", "ស្តាប់ អានអត្ថបទដែលអ្នកជ្រើសឲ្យឮ។ មិនមាននៅក្នុងការបង្ហាញនេះទេ។")), SPEAK, t("Listen", "ស្តាប់")),
+        (go("ask-%d" % P.index(p)), ASK, t("Ask an AI", "សួរ AI")),
+        (act("share", t("Link copied", "បានចម្លងតំណ")), SHARE, t("Share the page", "ចែករំលែកទំព័រ")))))
 
 
 def pageview(t, p, leaf="khmer"):
     text = p[leaf] if p.get(leaf) else p["khmer"]
-    seg = '<span class="seg lf"><span%s>%s</span><span%s>%s</span></span>' % (
-        ' class="on"' if leaf == "khmer" else "", t("Khmer", "ខ្មែរ"), ' class="on"' if leaf == "pali" else "", t("Pāli", "បាលី"))
+    i = P.index(p)
+    # a switch only where the facing leaf is typed: the page shows what IS, never a leaf that is missing
+    seg = ('<span class="seg lf"><span%s%s>%s</span><span%s%s>%s</span></span>' % (
+        ' class="on"' if leaf == "khmer" else "", go("page-%d" % i), t("Khmer", "ខ្មែរ"), ' class="on"' if leaf == "pali" else "", go("pali-%d" % i), t("Pāli", "បាលី"))
+           if p.get("pali") else "")
     return ('<div class="where big">%s</div><div class="leafrow"><span class="k">%s</span>%s</div>' % (where(t, p), t("This opening", "ទំព័របើកនេះ"), seg)
             + typed(text, p["sentence"] if leaf == "khmer" else None)
-            + '<p class="cite">%s</p>' % t("The Buddhist Institute edition of the Tipiṭaka (Phnom Penh, 1927–69), volume %d, page %s. Typed by Se Mong Ly." % (p["volume"], ar_num(p["printed"])),
-                                          "ព្រះត្រៃបិដក បោះពុម្ពរបស់ពុទ្ធសាសនបណ្ឌិត្យ (ភ្នំពេញ ១៩២៧–១៩៦៩) ភាគ %s ទំព័រ %s។ វាយដោយ លី ម៉ុង សែ។" % (km_num(p["volume"]), p["printed"])))
+            + '<p class="cite">%s</p>' % cite(t, p))
 
 
-def S3(t):
-    return ('<div class="back">%s<span>%s</span></div>' % (BACK, t("Back to the results", "ត្រឡប់ទៅលទ្ធផល")) + pageview(t, P[0]) + tools(t)
+def S3(t, p=None):
+    p = p or P[0]
+    return ('<div class="back"%s>%s<span>%s</span></div>' % (go("S2"), BACK, t("Back to the results", "ត្រឡប់ទៅលទ្ធផល")) + pageview(t, p) + tools(t, p)
             + '<p class="fine">%s</p>' % t("Tap a word for its meaning in Samdech Chuon Nath's dictionary.", "ចុចលើពាក្យមួយ ដើម្បីមើលន័យក្នុងវចនានុក្រមសម្តេចព្រះសង្ឃរាជ ជួន ណាត។"))
 
 
-def S3p(t):
-    return ('<div class="back">%s<span>%s</span></div>' % (BACK, t("Back to the results", "ត្រឡប់ទៅលទ្ធផល")) + pageview(t, P[0], "pali") + tools(t)
+def S3p(t, p=None):
+    p = p or P[0]
+    return ('<div class="back"%s>%s<span>%s</span></div>' % (go("S2"), BACK, t("Back to the results", "ត្រឡប់ទៅលទ្ធផល")) + pageview(t, p, "pali") + tools(t, p)
             + '<p class="fine">%s</p>' % t("The facing page: the Pāli, in Khmer script, as the edition prints it beside the Khmer.",
                                            "ទំព័រទល់មុខ៖ បាលី ជាអក្សរខ្មែរ ដូចការបោះពុម្ព ដាក់ក្បែរភាសាខ្មែរ។"))
 
 
 def S4(t):
-    return ('<div class="back">%s<span>%s</span></div>' % (BACK, t("New question", "សំណួរថ្មី")) + askbox(t, Q_PHONE)
+    return ('<div class="back"%s>%s<span>%s</span></div>' % (go("S1"), BACK, t("New question", "សំណួរថ្មី")) + askbox(t, Q_PHONE)
             + '<div class="nomatch">%s<div><h1 class="h1s">%s</h1><p class="lede">%s</p></div></div>' % (spot("none"),
                 t("No page matches this closely", "គ្មានទំព័រណាត្រូវនឹងសំណួរនេះយ៉ាងជិតស្និទ្ធទេ"),
                 t("These are the closest. Other words may find more.", "ទាំងនេះគឺជិតជាងគេ។ ពាក្យផ្សេងទៀត អាចរកឃើញច្រើនជាងនេះ។"))
             + result(t, P[1], dim=True) + result(t, P[3], dim=True)
-            + '<div class="btnrow"><div class="btn ghost">%s</div><div class="btn ghost">%s%s</div></div>' % (t("Try other words", "សាកពាក្យផ្សេង"), ASK, t("Ask an AI", "សួរ AI")))
+            + '<div class="btnrow"><div class="btn ghost"%s>%s</div><div class="btn ghost"%s>%s%s</div></div>' % (go("S1"), t("Try other words", "សាកពាក្យផ្សេង"), go("ask-phone"), ASK, t("Ask an AI", "សួរ AI")))
 
 
 def S5(t):
     rows = [(Q_ANGER, ("Today", "ថ្ងៃនេះ")), (("Is it wrong to eat meat?", "តើការបរិភោគសាច់ ខុសឬទេ?"), ("Yesterday", "ម្សិលមិញ")),
             (EXAMPLES[2], ("20 November", "២០ វិច្ឆិកា")), (EXAMPLES[0], ("18 November", "១៨ វិច្ឆិកា"))]
-    lis = "".join('<li><div><span class="rq">%s</span><span class="rw">%s</span></div><span class="del" aria-label="%s">%s</span></li>'
-                  % (t(*q), t(*w), t("Delete", "លុប"), TRASH) for q, w in rows)
+    lis = "".join('<li%s><div><span class="rq">%s</span><span class="rw">%s</span></div><span class="del" aria-label="%s"%s>%s</span></li>'
+                  % (key(q), t(*q), t(*w), t("Delete", "លុប"), act("del", t("Deleted", "បានលុប")), TRASH) for q, w in rows)
     return ('<h1>%s</h1>' % t("Your questions", "សំណួររបស់អ្នក")
             + '<div class="note" style="display:flex;gap:10px;align-items:flex-start">%s<span>%s</span></div>' % (DEVICE,
                 t("Kept only on this device. Nothing is sent anywhere, and no account is needed.", "រក្សាទុកតែនៅលើឧបករណ៍នេះ។ គ្មានអ្វីត្រូវបានផ្ញើទៅកន្លែងណាទេ ហើយមិនត្រូវការគណនីទេ។"))
             + '<ul class="hist">%s</ul>' % lis
-            + '<div class="btnrow"><div class="btn ghost">%s%s</div><div class="btn ghost">%s</div></div>' % (DOWN, t("Save as a file", "រក្សាទុកជាឯកសារ"), t("Delete all", "លុបទាំងអស់"))
+            + '<div class="btnrow"><div class="btn ghost"%s>%s%s</div><div class="btn ghost"%s>%s</div></div>' % (
+                act("save", t("Saved as a file", "បានរក្សាទុកជាឯកសារ")), DOWN, t("Save as a file", "រក្សាទុកជាឯកសារ"), act("delall"), t("Delete all", "លុបទាំងអស់"))
+            + (('<div class="confirm" hidden><p>%s</p><div class="btnrow"><div class="btn"%s>%s</div><div class="btn ghost"%s>%s</div></div></div>'
+                '<p class="empty" hidden>%s</p>') % (t("Delete all your questions from this device?", "លុបសំណួរទាំងអស់របស់អ្នក ពីឧបករណ៍នេះ?"),
+                act("delall-yes", t("Deleted", "បានលុប")), t("Delete all", "លុបទាំងអស់"), act("delall-no"), t("Keep them", "រក្សាទុកវា"),
+                t("No questions kept on this device.", "គ្មានសំណួរដែលរក្សាទុកនៅលើឧបករណ៍នេះទេ។")) if WALK else "")
             + '<p class="fine">%s</p>' % t("Safari may clear this after a week without a visit, unless the site is on your Home Screen. A saved file keeps it.",
                                            "Safari អាចលុបវា បន្ទាប់ពីមួយសប្តាហ៍ដែលមិនបានចូលមើល លុះត្រាតែគេហទំព័រនៅលើអេក្រង់ដើមរបស់អ្នក។ ឯកសារដែលបានរក្សាទុក រក្សាវាបាន។"))
 
 
-def S6(t):
-    opt = '<div class="radio%s"><i></i><div><div class="t">%s</div><div class="s">%s</div></div></div>'
-    return (pageview(t, P[0]) + '<div class="scrim"></div>'
+def S6(t, p=None, q=None, back=None):
+    p, q = p or P[0], q or Q_ANGER
+    opt = '<div class="radio%s"%s><i></i><div><div class="t">%s</div><div class="s">%s</div></div></div>'
+    copied = "%s\n\n%s\n\n%s" % (p["sentence"].replace("\u200b", ""), cite(t, p), t(*q))
+    return (pageview(t, p) + '<div class="scrim"%s></div>' % go(back or "page-%d" % P.index(p))
             + '<div class="sheet" style="margin-top:-260px"><div class="grab"></div><h2>%s</h2><div class="quote">%s</div>'
-            % (t("Ask an AI about this passage", "សួរ AI អំពីអត្ថបទនេះ"), esc(P[0]["sentence"]))
-            + '<div class="field area"><span class="k">%s</span>%s</div>' % (t("Your question", "សំណួររបស់អ្នក"), t(*Q_ANGER))
+            % (t("Ask an AI about this passage", "សួរ AI អំពីអត្ថបទនេះ"), esc(p["sentence"]))
+            + '<div class="field area"><span class="k">%s</span>%s</div>' % (t("Your question", "សំណួររបស់អ្នក"), t(*q))
             + '<p class="sh">%s</p><div class="card">%s%s%s</div>' % (t("Ask in", "សួរនៅ"),
-                opt % (" on", t("Just copy it", "ចម្លងប៉ុណ្ណោះ"), t("The passage, its place and your question, ready to paste anywhere", "អត្ថបទ ទីតាំងរបស់វា និងសំណួររបស់អ្នក រួចរាល់សម្រាប់បិទភ្ជាប់គ្រប់ទីកន្លែង")),
-                opt % ("", "[ Assistant name ]", t("Copied, then it opens in a new tab", "ចម្លង រួចបើកក្នុងផ្ទាំងថ្មី")),
-                opt % ("", "[ Assistant name ]", t("Copied, then it opens in a new tab", "ចម្លង រួចបើកក្នុងផ្ទាំងថ្មី")))
+                opt % (" on", act("radio"), t("Just copy it", "ចម្លងប៉ុណ្ណោះ"), t("The passage, its place and your question, ready to paste anywhere", "អត្ថបទ ទីតាំងរបស់វា និងសំណួររបស់អ្នក រួចរាល់សម្រាប់បិទភ្ជាប់គ្រប់ទីកន្លែង")),
+                opt % ("", act("radio"), "[ Assistant name ]", t("Copied, then it opens in a new tab", "ចម្លង រួចបើកក្នុងផ្ទាំងថ្មី")),
+                opt % ("", act("radio"), "[ Assistant name ]", t("Copied, then it opens in a new tab", "ចម្លង រួចបើកក្នុងផ្ទាំងថ្មី")))
             + '<div class="note">%s</div>' % t("AI assistants may assume a different edition's wording, and may be wrong. Check what it says against the page.",
                                                "ជំនួយការ AI អាចសន្មតយកពាក្យពេចន៍នៃការបោះពុម្ពផ្សេង ហើយអាចខុស។ សូមផ្ទៀងផ្ទាត់អ្វីដែលវានិយាយ ជាមួយទំព័រនេះ។")
-            + '<div class="btn">%s%s</div><p class="fine">%s</p></div>' % (COPY, t("Copy", "ចម្លង"), t("Nothing leaves this page until you press.", "គ្មានអ្វីចេញពីទំព័រនេះទេ រហូតដល់អ្នកចុច។")))
+            + '<div class="btn"%s>%s%s</div><p class="fine">%s</p></div>' % (act("copy", t("Copied. Paste it where you like.", "បានចម្លង។ បិទភ្ជាប់វានៅកន្លែងដែលអ្នកចង់បាន។"), copied),
+                COPY, t("Copy", "ចម្លង"), t("Nothing leaves this page until you press.", "គ្មានអ្វីចេញពីទំព័រនេះទេ រហូតដល់អ្នកចុច។")))
 
 
 CREDITS = [(("The text", "អត្ថបទ"), ("The Buddhist Institute edition of the Tipiṭaka (Phnom Penh, 1927–69)", "ព្រះត្រៃបិដក បោះពុម្ពរបស់ពុទ្ធសាសនបណ្ឌិត្យ (ភ្នំពេញ ១៩២៧–១៩៦៩)")),
@@ -279,7 +336,13 @@ NOFOOT = {"6"}
 def page(sid, render, lang, dark=False, desk=False):
     km = lang == "km"
     t = (lambda e, k: k) if km else (lambda e, k: e)
-    body = render(t).replace("℠", '<span class="sm">℠</span>')
+    body = check(sid, lang, render(t).replace("℠", '<span class="sm">℠</span>'))
+    return frame(sid, lang, body, t, km, dark, desk)
+
+
+def check(sid, lang, body):
+    """The build's refusals, run on every board AND on every walkthrough view (build-walk.py)."""
+    km = lang == "km"
     plain = re.sub(r"<[^>]+>", " ", body)
     for pat in BARRED + ([r"ធនាគារ"] if km else []):
         assert not re.search(pat, plain, re.I), "%s/%s: barred %r" % (sid, lang, pat)
@@ -289,6 +352,10 @@ def page(sid, render, lang, dark=False, desk=False):
     for p in P:   # every highlight shown is an exact span of its typed page
         for m in re.findall(r"<mark>(.*?)</mark>", body, re.S):
             assert any(html.unescape(m) in q["khmer"] for q in P), "%s: a highlight that is not on any typed page" % sid
+    return body
+
+
+def frame(sid, lang, body, t, km, dark, desk):
     band = ("Khmer: our draft, not yet reviewed · ភាសាខ្មែរ៖ សេចក្តីព្រាងរបស់យើង មិនទាន់បានពិនិត្យ" if km else "")
     themes = "".join('<span%s>%s</span>' % (' class="on"' if i == (2 if dark else 0) else "", x) for i, x in enumerate(t(("System", "Light", "Dark"), ("ប្រព័ន្ធ", "ភ្លឺ", "ងងឹត"))))
     langs = "".join('<span%s>%s</span>' % (' class="on"' if (i == 0) == (not km) else "", x) for i, x in enumerate(("EN", "ខ្មែរ")))

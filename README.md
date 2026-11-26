@@ -16,6 +16,12 @@ screens and a dark pass.
 - **Placeholders:** the icon (Silicon Wat's own mark is not settled) and the explainer, drawn as a still until it is made.
 - **The Khmer** is our own draft until a native reader approves it; every Khmer board says so.
 
+## The walkthrough
+
+`finder.html` (the front door's *Start here*): one page you can drive on a phone, built by `build-walk.py` from the SAME screen
+functions as the drawings (`build-boards.py` with its `WALK` hooks on, which leave every board byte-identical when off). It
+searches nothing: one fixed example (anger) and one no-close-match example (smartphones); typing anything else says so.
+
 ## Rebuild
 
 ```sh
@@ -24,6 +30,7 @@ python3 -m http.server 8333 &      # measure.py reads the boards over HTTP
 python3 build-boards.py            # the boards + board.css + canvas.json, from the brand layer
 python3 measure.py                 # each board's real height → heights.json
 python3 build-boards.py            # again, so canvas.json carries the measured heights
+python3 build-walk.py              # the walkthrough, from the same screens
 python3 build-index.py && python3 build-wall.py   # the front door and the wall, generated from canvas.json
 python3 build-og.py && python3 build-icons.py     # the link-preview card, the icons, the manifest
 node scripts/check-brand.mjs       # the vendored brand layer still matches brand.lock

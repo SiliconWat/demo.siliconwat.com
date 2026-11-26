@@ -52,6 +52,8 @@ SHELL = """<!doctype html><html><head><meta charset="utf-8">
 CARDS = {
     "og.png": '<div class="inner"><div class="pali">ឯវំ មេ សុតំ ។</div><h1 style="font-size:84px">siliconwat.com</h1>'
               '<p style="max-width:26ch">Find it in the Tipiṭaka. Drawings, in English and Khmer.</p></div>',
+    "og-finder.png": '<div class="inner"><div class="pali">ឯវំ មេ សុតំ ។</div><h1 style="font-size:78px">The finder</h1>'
+                     '<p style="max-width:28ch">Ask, see the typed pages of the Tipiṭaka that may answer, open one. A walkthrough, in English and Khmer.</p></div>',
 }
 
 
