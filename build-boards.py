@@ -244,8 +244,8 @@ def S7(t):
                    t("It writes no answers and no summaries. Every word on a result is the Tipiṭaka as typed. To talk a passage over, Ask an AI copies it for you, and you choose where.",
                      "វាមិនសរសេរចម្លើយ ឬសេចក្តីសង្ខេបទេ។ ពាក្យទាំងអស់នៅលើលទ្ធផល គឺជាព្រះត្រៃបិដក ដូចដែលបានវាយ។ ដើម្បីពិភាក្សាអំពីអត្ថបទមួយ មុខងារ សួរ AI ចម្លងវាជូនអ្នក ហើយអ្នកជ្រើសរើសកន្លែង។"))
             + card("hand", t("How everyday words find a page", "របៀបដែលពាក្យប្រចាំថ្ងៃរកឃើញទំព័រ"),
-                   t("Behind the search, a computer wrote down once, in Khmer and English, the questions each page may answer, so that a question in everyday words can find it. Those questions are never shown to anyone.",
-                     "នៅពីក្រោយការស្វែងរក កុំព្យូទ័របានសរសេរម្តង ជាភាសាខ្មែរ និងអង់គ្លេស នូវសំណួរដែលទំព័រនីមួយៗអាចឆ្លើយបាន ដើម្បីឲ្យសំណួរជាពាក្យប្រចាំថ្ងៃអាចរកឃើញវា។ សំណួរទាំងនោះ មិនដែលបង្ហាញដល់នរណាម្នាក់ទេ។"))
+                   t("Behind the search, a computer wrote down once, in Khmer and English, the questions each page may answer, so that a question in everyday words can find it. Those questions are never shown on the site.",
+                     "នៅពីក្រោយការស្វែងរក កុំព្យូទ័របានសរសេរម្តង ជាភាសាខ្មែរ និងអង់គ្លេស នូវសំណួរដែលទំព័រនីមួយៗអាចឆ្លើយបាន ដើម្បីឲ្យសំណួរជាពាក្យប្រចាំថ្ងៃអាចរកឃើញវា។ សំណួរទាំងនោះ មិនដែលបង្ហាញនៅលើគេហទំព័រទេ។"))
             + card("device", t("Your privacy", "ឯកជនភាពរបស់អ្នក"),
                    t("Your question is searched on this device, and your questions are kept only on it. Visits are counted without cookies, and the count never sees a question.",
                      "សំណួររបស់អ្នក ត្រូវបានស្វែងរកនៅលើឧបករណ៍នេះ ហើយសំណួររបស់អ្នក រក្សាទុកតែនៅលើវាប៉ុណ្ណោះ។ ការចូលមើលត្រូវបានរាប់ដោយគ្មានខូគី ហើយការរាប់នោះ មិនដែលឃើញសំណួរទេ។"))
