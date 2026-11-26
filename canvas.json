@@ -1,0 +1,195 @@
+{
+ "pages": [
+  {
+   "id": "finder",
+   "name": "siliconwat.com · the finder"
+  }
+ ],
+ "artboards": [
+  {
+   "file": "S1.html",
+   "page": "finder",
+   "title": "1 · The finder, English, phone",
+   "w": 390,
+   "h": 997,
+   "x": 0,
+   "y": 0
+  },
+  {
+   "file": "S1Km.html",
+   "page": "finder",
+   "title": "1 · The finder, Khmer, phone",
+   "w": 390,
+   "h": 1072,
+   "x": 0,
+   "y": 1888
+  },
+  {
+   "file": "S2.html",
+   "page": "finder",
+   "title": "2 · Results, English, phone",
+   "w": 390,
+   "h": 1217,
+   "x": 470,
+   "y": 0
+  },
+  {
+   "file": "S2Km.html",
+   "page": "finder",
+   "title": "2 · Results, Khmer, phone",
+   "w": 390,
+   "h": 1333,
+   "x": 470,
+   "y": 1888
+  },
+  {
+   "file": "S3.html",
+   "page": "finder",
+   "title": "3 · A page, Khmer, English, phone",
+   "w": 390,
+   "h": 1264,
+   "x": 940,
+   "y": 0
+  },
+  {
+   "file": "S3Km.html",
+   "page": "finder",
+   "title": "3 · A page, Khmer, Khmer, phone",
+   "w": 390,
+   "h": 1337,
+   "x": 940,
+   "y": 1888
+  },
+  {
+   "file": "S3p.html",
+   "page": "finder",
+   "title": "3p · A page, the facing Pāli, English, phone",
+   "w": 390,
+   "h": 1161,
+   "x": 1410,
+   "y": 0
+  },
+  {
+   "file": "S3pKm.html",
+   "page": "finder",
+   "title": "3p · A page, the facing Pāli, Khmer, phone",
+   "w": 390,
+   "h": 1213,
+   "x": 1410,
+   "y": 1888
+  },
+  {
+   "file": "S4.html",
+   "page": "finder",
+   "title": "4 · No close match, English, phone",
+   "w": 390,
+   "h": 844,
+   "x": 1880,
+   "y": 0
+  },
+  {
+   "file": "S4Km.html",
+   "page": "finder",
+   "title": "4 · No close match, Khmer, phone",
+   "w": 390,
+   "h": 949,
+   "x": 1880,
+   "y": 1888
+  },
+  {
+   "file": "S5.html",
+   "page": "finder",
+   "title": "5 · Your questions (this device), English, phone",
+   "w": 390,
+   "h": 844,
+   "x": 2350,
+   "y": 0
+  },
+  {
+   "file": "S5Km.html",
+   "page": "finder",
+   "title": "5 · Your questions (this device), Khmer, phone",
+   "w": 390,
+   "h": 865,
+   "x": 2350,
+   "y": 1888
+  },
+  {
+   "file": "S6.html",
+   "page": "finder",
+   "title": "6 · Ask an AI, English, phone",
+   "w": 390,
+   "h": 1427,
+   "x": 2820,
+   "y": 0
+  },
+  {
+   "file": "S6Km.html",
+   "page": "finder",
+   "title": "6 · Ask an AI, Khmer, phone",
+   "w": 390,
+   "h": 1498,
+   "x": 2820,
+   "y": 1888
+  },
+  {
+   "file": "S7.html",
+   "page": "finder",
+   "title": "7 · About the finder, English, phone",
+   "w": 390,
+   "h": 1625,
+   "x": 3290,
+   "y": 0
+  },
+  {
+   "file": "S7Km.html",
+   "page": "finder",
+   "title": "7 · About the finder, Khmer, phone",
+   "w": 390,
+   "h": 1728,
+   "x": 3290,
+   "y": 1888
+  },
+  {
+   "file": "D1.html",
+   "page": "finder",
+   "title": "1 · The finder, English, desktop",
+   "w": 1280,
+   "h": 800,
+   "x": 0,
+   "y": 3776
+  },
+  {
+   "file": "D2.html",
+   "page": "finder",
+   "title": "2 · Results beside the page, English, desktop",
+   "w": 1280,
+   "h": 1109,
+   "x": 1360,
+   "y": 3776
+  },
+  {
+   "file": "S1Dark.html",
+   "page": "finder",
+   "title": "1 · The finder, dark pass, English, phone",
+   "w": 390,
+   "h": 997,
+   "x": 2720,
+   "y": 3776
+  },
+  {
+   "file": "S2Dark.html",
+   "page": "finder",
+   "title": "2 · Results, dark pass, English, phone",
+   "w": 390,
+   "h": 1217,
+   "x": 3190,
+   "y": 3776
+  }
+ ],
+ "annotations": [],
+ "launch": {
+  "page": "finder",
+  "view": "canvas"
+ }
+}
