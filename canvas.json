@@ -151,6 +151,24 @@
    "y": 1888
   },
   {
+   "file": "S8.html",
+   "page": "finder",
+   "title": "8 · An address with no typed page, English, phone",
+   "w": 390,
+   "h": 844,
+   "x": 3760,
+   "y": 0
+  },
+  {
+   "file": "S8Km.html",
+   "page": "finder",
+   "title": "8 · An address with no typed page, Khmer, phone",
+   "w": 390,
+   "h": 865,
+   "x": 3760,
+   "y": 1888
+  },
+  {
    "file": "D1.html",
    "page": "finder",
    "title": "1 · The finder, English, desktop",

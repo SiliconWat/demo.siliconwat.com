@@ -314,12 +314,22 @@ def S7(t):
             % t("The gift of the Dhamma surpasses every gift. Dhammapada 354", "ធម្មទាន ឈ្នះទានទាំងពួង។ ធម្មបទ ៣៥៤"))
 
 
+def S8(t):
+    """An address that opens no typed page (2026-11-27). It names the address, never the reader; how much is typed is said once,
+    on About, never per page (SPEC), so this board points there instead of saying it again."""
+    return ('<div class="back"%s>%s<span>%s</span></div>' % (go("S1"), BACK, t("New question", "សំណួរថ្មី"))
+            + '<div class="nomatch">%s<div><h1 class="h1s">%s</h1><p class="lede">%s</p></div></div>' % (spot("none"),
+                t("No typed page at this address", "គ្មានទំព័រដែលបានវាយ នៅអាសយដ្ឋាននេះទេ"),
+                t("About says how much of the edition is typed so far.", "ទំព័រអំពី ប្រាប់ថា ការបោះពុម្ពនេះ ត្រូវបានវាយរួចប៉ុណ្ណាហើយ។"))
+            + '<div class="btnrow"><div class="btn ghost"%s>%s</div><div class="btn ghost"%s>%s</div></div>' % (go("S1"), t("New question", "សំណួរថ្មី"), go("S7"), t("About", "អំពី")))
+
+
 # ── desktop, English only ──────────────────────────────────────────────────────────────────────────────────────────
 def D1(t):
     return ('<span class="tag">[ PLACEHOLDER ICON ]</span><div class="cols"><div><h1>%s</h1><p class="lede" style="font-size:17px">%s</p>%s%s%s</div><div style="margin-top:22px">%s%s</div></div>'
             % (t("Find it in the Tipiṭaka", ""), t("Ask in your own words, in Khmer or English. You get the pages of the Khmer Tipiṭaka that may answer, with the lines highlighted.", ""),
                askbox(t, desk=True), examples(t), recent(t), explainer(t),
-               card("none", t("It writes no answers", ""), t("Every word on a result is the Tipiṭaka as typed.", ""))))
+               card("none", t("It writes no answers", "វាមិនសរសេរចម្លើយទេ"), t("Every word on a result is the Tipiṭaka as typed.", "ពាក្យទាំងអស់នៅលើលទ្ធផល គឺជាព្រះត្រៃបិដក ដូចដែលបានវាយ។"))))
 
 
 def D2(t):
@@ -329,7 +339,8 @@ def D2(t):
 
 
 SCREENS = [("1", "The finder", S1), ("2", "Results", S2), ("3", "A page, Khmer", S3), ("3p", "A page, the facing Pāli", S3p),
-           ("4", "No close match", S4), ("5", "Your questions (this device)", S5), ("6", "Ask an AI", S6), ("7", "About the finder", S7)]
+           ("4", "No close match", S4), ("5", "Your questions (this device)", S5), ("6", "Ask an AI", S6), ("7", "About the finder", S7),
+           ("8", "An address with no typed page", S8)]
 NOFOOT = {"6"}
 
 
